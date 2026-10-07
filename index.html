@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Épicerie Saint Augustin - Commande</title>
+  <title>Épicerie Saint Augustin</title>
   <style>
     body { 
       font-family: Georgia, 'Times New Roman', serif; 
@@ -13,6 +13,10 @@
       padding: 40px 20px; 
       margin: 0;
     }
+    /* On cache l'interface par défaut pour ne pas gêner ceux qui sont redirigés automatiquement */
+    #in-app-content { display: none; }
+    #loading { display: block; margin-top: 50px; font-size: 1.2rem; color: #8b2f2f; font-weight: bold; font-style: italic; }
+    
     .container {
       max-width: 500px;
       margin: 0 auto;
@@ -34,23 +38,49 @@
       font-weight: bold; 
       font-size: 1.2rem; 
       margin-top: 20px; 
-      transition: background 0.3s;
+      transition: transform 0.2s, background 0.3s;
     }
-    .btn:hover { background: #8b2f2f; }
+    .btn:hover { background: #8b2f2f; transform: scale(1.05); }
     .note { font-size: 0.85rem; margin-top: 20px; color: #7a6a55; font-style: italic;}
   </style>
 </head>
 <body>
-  <div class="container">
+
+  <!-- Message furtif pour ceux qui sont redirigés automatiquement -->
+  <div id="loading">Redirection en cours... 🥖🍷</div>
+
+  <!-- Contenu affiché UNIQUEMENT si l'utilisateur est coincé sur Facebook/WhatsApp -->
+  <div class="container" id="in-app-content">
     <h1>Épicerie Saint Augustin</h1>
-    <p>Nos pré-ventes de saucissons médaillés et de vin de l'Abbaye de Jouques sont ouvertes !</p>
+    <p>Bienvenue ! Nos pré-ventes de saucissons médaillés et de vin de l'Abbaye de Jouques sont ouvertes.</p>
     
-    <!-- Le target="_blank" est la magie qui sort l'utilisateur de Facebook/WhatsApp -->
     <a href="https://script.google.com/a/macros/airbus.com/s/AKfycby46LIWB1zTnrKvkYSVHAd4Mge2J1vIszYzj40FZUdTSPdrS9VdUWLNwvLQun4WrSyI/exec" target="_blank" class="btn">
       Accéder au site
     </a>
     
-    <p class="note">Pour ke bon fonctionnement de votre commande, le formulaire va s'ouvrir dans votre navigateur principal.</p>
+    <p class="note">Pour garantir la validation de votre commande, notre site va s'ouvrir dans votre navigateur principal.</p>
   </div>
+
+  <script>
+    // L'URL de ton site Apps Script
+    var urlDestination = "https://script.google.com/a/macros/airbus.com/s/AKfycby46LIWB1zTnrKvkYSVHAd4Mge2J1vIszYzj40FZUdTSPdrS9VdUWLNwvLQun4WrSyI/exec";
+    
+    // On analyse le navigateur de l'utilisateur
+    var ua = navigator.userAgent || navigator.vendor || window.opera;
+    var isInApp = (ua.indexOf("FBAN") > -1) || 
+                  (ua.indexOf("FBAV") > -1) || 
+                  (ua.indexOf("Instagram") > -1) || 
+                  (ua.indexOf("WhatsApp") > -1) ||
+                  (ua.indexOf("LinkedIn") > -1);
+
+    if (isInApp) {
+      // S'il est sur une application sociale, on lui montre le bouton
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('in-app-content').style.display = 'block';
+    } else {
+      // S'il est sur un bon navigateur, on le redirige automatiquement sans qu'il n'ait rien à faire
+      window.location.replace(urlDestination);
+    }
+  </script>
 </body>
 </html>
