@@ -332,6 +332,12 @@
       });
     });
 
+    document.querySelectorAll('.qty-select').forEach(select => {
+      for (let quantity = select.options.length; quantity <= 20; quantity++) {
+        select.add(new Option(String(quantity), String(quantity)));
+      }
+    });
+
     buildFlavorGrid();
     updateCounters();
   </script>
